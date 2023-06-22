@@ -29,14 +29,15 @@ class UserController extends Controller
     }
     public function store(UserRequest $request){
         $this->check_access('add user');
-        $insert = new User;
-        $insert->name = $request->name;
-        $insert->email = $request->email;
-        $insert->role_id = $request->role_id;
-        $insert->password = Hash::make($request->password);
-        $insert->created_at = Carbon::now()->toDateTimeString();
-        $insert->created_by = auth()->user()->id;
-        $insert->save();
+        $user = new User;
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->role_id = $request->role_id;
+        $user->password = Hash::make($request->password);
+        $user->created_at = Carbon::now()->toDateTimeString();
+        $user->created_by = auth()->user()->id;
+        $user->save();
+        $user->assignRole($user->role->name);
         $this->message('success', 'User Created successfully!');
         return redirect()->route('user.view');
     }
