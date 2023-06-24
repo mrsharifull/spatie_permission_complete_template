@@ -8,6 +8,7 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Models\RoleHasPermission;
 use App\Http\Requests\RoleRequest;
+use Illuminate\Support\Facades\Response;
 use App\Models\CustomRole;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -74,6 +75,12 @@ class RoleController extends Controller
             $role->save();
             $this->message('success', 'Role '.$role->name.' deleted successfully');
             return redirect()->route('role.view');
+        }
+    }
+    public function details($id=null){
+        if($id!=null){
+            $role = CustomRole::with(['created_user', 'updated_user', 'deleted_user'])->where('deleted_at', null)->where('id', $id)->first();
+            return Response::json($role, 200);
         }
     }
 }

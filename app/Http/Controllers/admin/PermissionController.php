@@ -10,6 +10,7 @@ use App\Models\CustomPermission;
 use App\Http\Requests\PermissionRequest;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
 
 class PermissionController extends Controller
 {
@@ -60,6 +61,12 @@ class PermissionController extends Controller
             $permission->save();
             $this->message('success', 'Permission '.$permission->name.' deleted successfully');
             return redirect()->route('permission.view');
+        }
+    }
+    public function details($id=null){
+        if($id!=null){
+            $permission = CustomPermission::with(['created_user', 'updated_user', 'deleted_user'])->where('deleted_at', null)->where('id', $id)->first();
+            return Response::json($permission, 200);
         }
     }
 }

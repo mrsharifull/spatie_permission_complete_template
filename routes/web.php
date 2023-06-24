@@ -22,6 +22,7 @@ Route::group(['as' => 'user.', 'prefix' => '/user/info'], function () {
     Route::get('/edit/{id}', [UserController::class, 'edit'])->name('edit');
     Route::put('/update/{id}', [UserController::class, 'update'])->name('update');
     Route::get('/delete/{id}', [UserController::class, 'delete'])->name('delete');
+    Route::get('/details/{id}', [UserController::class, 'details'])->name('details');
 
 });
 
@@ -33,6 +34,7 @@ Route::group(['as' => 'role.', 'prefix' => '/user/role'], function () {
     Route::get('/edit/{id}', [RoleController::class, 'edit'])->name('edit');
     Route::put('/update/{id}', [RoleController::class, 'update'])->name('update');
     Route::get('/delete/{id}', [RoleController::class, 'delete'])->name('delete');
+    Route::get('/details/{id}', [RoleController::class, 'details'])->name('details');
 });
 
 // User Permission Routes
@@ -43,6 +45,7 @@ Route::group(['as' => 'permission.', 'prefix' => '/user/permission'], function (
     Route::get('/edit/{id}', [PermissionController::class, 'edit'])->name('edit');
     Route::put('/update/{id}', [PermissionController::class, 'update'])->name('update');
     Route::get('/delete/{id}', [PermissionController::class, 'delete'])->name('delete');
+    Route::get('/details/{id}', [PermissionController::class, 'details'])->name('details');
 });
 
 

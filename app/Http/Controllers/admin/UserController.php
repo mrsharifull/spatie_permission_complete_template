@@ -10,6 +10,7 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
 
 class UserController extends Controller
 {
@@ -81,6 +82,12 @@ class UserController extends Controller
             $user->save();
             $this->message('success', 'User '.$user->name.' deleted successfully');
             return redirect()->route('user.view');
+        }
+    }
+    public function details($id=null){
+        if($id!=null){
+            $user = User::with(['created_user', 'updated_user', 'deleted_user', 'role'])->where('deleted_at', null)->where('id', $id)->first();
+            return Response::json($user, 200);
         }
     }
 }

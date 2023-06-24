@@ -43,7 +43,7 @@
             <div class="x_content">
                 <div class="row">
                     <div class="col-sm-12">
-                        <div class="card-box table-responsive">
+                        <div class="card-box table-responsive" id="table">
                             <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap"
                                 cellspacing="0" width="100%">
                                 <thead>
@@ -69,7 +69,7 @@
                                             <td>
                                                 <div class="btn-group">
                                                     <a href="javascript:void(0)" class="btn btn-info btnView"
-                                                        data-id=""><i class="fa fa-eye"></i></a>
+                                                    data-id="{{$user->id}}"><i class="fa fa-eye"></i></a>
                                                     @if (Auth::user()->can('edit user') || Auth::user()->role->id == 1)
                                                         <a href="{{route('user.edit',$user->id)}}" class="btn btn-dark btnEdit"><i
                                                             class="fa fa-edit"></i></a>
@@ -91,6 +91,73 @@
             </div>
         </div>
     </div>
+
+
+{{-- Modals --}}
+<div class="modal fade" id="view-modal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">View Details <span id="view-header"></span></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body row">
+                <div class="col-md-10 m-auto">
+                    <div class="table-responsive">
+                        <table class="table table-borderless table-striped">
+                            <tbody id="view-tbody">
+                                <tr>
+                                    <td>Name</td>
+                                    <td>
+                                        <span id="view-name"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Role</td>
+                                    <td>
+                                        <span id="view-role"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Created At</td>
+                                    <td>
+                                        <span id="view-createdAt"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Created By</td>
+                                    <td>
+                                        <span id="view-createdBy"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Updated At</td>
+                                    <td>
+                                        <span id="view-updatedAt"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Updated By</td>
+                                    <td>
+                                        <span id="view-updatedBy"></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 @endsection
 @push('third-party-js')
     <!-- Datatables -->
@@ -111,4 +178,33 @@
     <script src="{{ asset('admin/vendors/pdfmake/build/vfs_fonts.js') }}""></script>
 @endpush
 @push('js')
+<script>
+    $(document).ready(function() {
+        $('#table').on('click', 'tbody tr td .btn-group .btnView', function () {
+            if($(this).data('id') != null || $(this).data('id') != ''){
+                let url = ("{{ route('user.details', ['id']) }}");
+                let _url = url.replace('id', $(this).data('id'));
+                $.ajax({
+                    url: _url,
+                    method: "GET",
+                    success: function (response) {
+                        console.log(response);
+
+                        $('#view-name').html(response.name);
+                        $('#view-role').html(response.role.name);
+                        $('#view-createdAt').html(response.created_at ? new Date(response.created_at) : '');
+                        $('#view-createdBy').html(response.created_user ? response.created_user.name : 'system');
+                        $('#view-updatedAt').html(response.updated_at ? new Date(response.updated_at) : '');
+                        $('#view-updatedBy').html(response.updated_user ? response.updated_user.name: '');
+
+                        $('#view-modal').modal('show');
+                    }
+                });
+            }else{
+                alart('Something went wrong');
+            }
+        });
+    });
+
+</script>
 @endpush
